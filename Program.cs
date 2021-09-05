@@ -9,7 +9,7 @@ namespace OpenRpg
         {
             Console.CursorVisible = false;
             ClrCnsl.WriteLine("[#cyan]OpenRpg v.0.1");
-            ClrCnsl.WriteLine("[#red]Hel[#yello]lo Wor[#darkcyan]ld");
+            ClrCnsl.WriteLine("[#red]Hel[#yellow]lo Wor[#darkcyan]ld");
 
             foreach (var t in UserData.GetRegisteredTypes())
                 Console.WriteLine($"T: {t.Name}");
