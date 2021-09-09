@@ -1,5 +1,5 @@
 ﻿using System;
-using MoonSharp.Interpreter;
+using static OpenRpg.ClrCnsl;
 
 namespace OpenRpg
 {
@@ -8,11 +8,8 @@ namespace OpenRpg
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
-            ClrCnsl.WriteLine("[#cyan]OpenRpg v.0.1");
-            ClrCnsl.WriteLine("[#red]Hel[#yellow]lo Wor[#darkcyan]ld");
-
-            foreach (var t in UserData.GetRegisteredTypes())
-                Console.WriteLine($"T: {t.Name}");
+            WriteLine("[#cyan]OpenRpg v.0.1");
+            LuaIndexer.Init();
         }
     }
 }
