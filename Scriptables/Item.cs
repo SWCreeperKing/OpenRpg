@@ -35,9 +35,12 @@ namespace OpenRpg
         {
         }
 
-        public override Enum[] GetMethods() => Values<Methods>();
-
-        public void Init(int itemLevel) => Call(Methods.Init, this, this.itemLevel = itemLevel);
+        public Item Init(int itemLevel)
+        {
+            Call(Methods.Init, this, this.itemLevel = itemLevel);
+            return this;
+        }
+        
         public double OnPlayerHeal(Player player, double heal) => Call(Methods.OnPlayerHeal, heal, player);
         public double OnPotionUse(Player player, double amt) => Call(Methods.OnPotionUse, amt, player);
         public double OnXpEarn(Player player, double amt) => Call(Methods.OnXpEarn, amt, player);
@@ -56,13 +59,7 @@ namespace OpenRpg
             (lootType, lootTable, lootRarity) = (type.ToEnum<LootType>(), table.ToEnum<LootTable>(),
                 rarity.ToEnum<LootRarity>());
 
+        public override Enum[] GetMethods() => Values<Methods>();
         public override string ToString() => $"[#{lootRarity.ToColor()}]{name}[#r]";
-
-        public Item CopyWithNewLevel(int itemLevel)
-        {
-            var copy = this.Clone(rawLua);
-            copy.itemLevel = itemLevel;
-            return copy;
-        }
     }
 }

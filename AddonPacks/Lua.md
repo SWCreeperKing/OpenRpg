@@ -61,11 +61,11 @@ that means it does not return anything. Fields will have a (T: ) to specify the 
         - Description of the item
     - (T:S) lore
         - Lore of the item
-    - (T:S) protection
+    - (T:N) protection
         - Amount of protection the item gives
-    - (T:S) itemLevel
+    - (T:N) itemLevel
         - Level of the item
-    - (T:S) damage
+    - (T:N) damage
         - Amount of damage the item does (all items equipped will be tallied)
 - Methods
     - Init([Item](#item), (Number) itemLevel)

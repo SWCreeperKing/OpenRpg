@@ -21,8 +21,7 @@ namespace OpenRpg
                 ClrCnsl.WriteLine("[#red]No AddonPacks Detected");
                 return;
             }
-            // todo: load packs
-
+            
             foreach (var t in Assembly.GetExecutingAssembly().GetTypes()
                 .Where(t => t.GetCustomAttributes<IndexAttribute>().Any() && t.IsSubclassOf(typeof(LuaLoader))))
             {

@@ -2,7 +2,7 @@
 
 namespace OpenRpg
 {
-    [Index("diff", "Difficulties")]
+    [Index("diff", "Difficulty")]
     public class Difficulty : LuaLoader
     {
         public string name = "Unknown Difficulty";
