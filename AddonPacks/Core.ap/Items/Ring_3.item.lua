@@ -1,4 +1,4 @@
-﻿function Init(item)
+﻿function Init(item, lvl)
     item.name = "Skillful Ring"
     item.desc = "A 50% chance to 5x Xp"
     item.Loot("ring", "all", "legendary")

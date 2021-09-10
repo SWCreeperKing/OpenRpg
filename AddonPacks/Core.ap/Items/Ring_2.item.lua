@@ -1,4 +1,4 @@
-﻿function Init(item)
+﻿function Init(item, lvl)
     item.name = "Reinforced Ring"
     item.desc = "A 50% chance to 5x Bombs and Keys"
     item.Loot("ring", "monster", "epic")

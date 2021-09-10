@@ -1,4 +1,4 @@
-﻿function Init(item) 
+﻿function Init(item, lvl) 
     item.name = "Greedy Necklace"
     item.desc = "2x Gold Coins"
     item.lore = "Ooh! Piece of candy! Ooh! Piece of candy! Ooh! Piece of candy!"

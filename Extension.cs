@@ -18,5 +18,7 @@ namespace OpenRpg
         }
 
         public static T Clone<T>(this T t, params object[] param) => (T)((object)t).Clone(param);
+
+        public static string Name(this Enum e) => nameof(e);
     }
 }

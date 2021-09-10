@@ -1,4 +1,4 @@
-﻿function Init(item)
+﻿function Init(item, lvl)
     item.name = "Angelic Gauntlet"
     item.desc = "+5 Potions every floor"
     item.Loot("gauntlet", "chest", "uncommon")

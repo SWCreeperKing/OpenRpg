@@ -1,4 +1,4 @@
-﻿function Init(item)
+﻿function Init(item, lvl)
     item.name = "Rich Gauntlet"
     item.desc = "+25% of your current gold every floor"
     item.Loot("gauntlet", "elite", "legendary")

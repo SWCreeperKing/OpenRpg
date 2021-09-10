@@ -1,6 +1,6 @@
-function Init(item)
+function Init(item, lvl)
     item.name = "Healthy Necklace"
-    item.desc = "+50% more Health from Health Potions"
+    item.desc = "+50% more Health from Healing"
     item.Loot("necklace", "chest", "uncommon")
 end
 

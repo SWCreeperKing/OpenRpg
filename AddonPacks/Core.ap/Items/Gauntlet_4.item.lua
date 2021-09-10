@@ -1,4 +1,4 @@
-﻿function Init(item)
+﻿function Init(item, lvl)
     item.name = "Vengeful Gauntlet"
     item.desc = "+(3 * floor level) damage"
     item.Loot("gauntlet", "random", "rare")

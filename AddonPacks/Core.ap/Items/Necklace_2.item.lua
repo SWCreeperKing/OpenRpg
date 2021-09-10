@@ -1,4 +1,4 @@
-﻿function Init(item)
+﻿function Init(item, lvl)
     item.name = "Strong Necklace"
     item.desc = "+25% more Attack Damage"
     item.Loot("necklace", "monster", "uncommon")

@@ -1,4 +1,4 @@
-﻿function Init(item)
+﻿function Init(item, lvl)
     item.name = "Demonic Gauntlet"
     item.desc = "+5 Bombs and Keys every floor"
     item.Loot("gauntlet", "elite", "epic")
