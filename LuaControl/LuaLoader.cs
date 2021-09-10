@@ -5,7 +5,7 @@ using MoonSharp.Interpreter;
 
 namespace OpenRpg
 {
-    public abstract class LuaLoader
+    public abstract class LuaLoader : ICopyable
     {
         public static CoreModules luaImports = CoreModules.Basic | CoreModules.Math;
 
@@ -17,7 +17,7 @@ namespace OpenRpg
         public LuaLoader(string rawLua)
         {
             this.rawLua = rawLua;
-            if (rawLua == "") throw new ArgumentNullException();
+            // if (rawLua == "") throw new ArgumentNullException();
             _script = new Script(luaImports);
             _script.DoString(rawLua);
             foreach (var method in GetMethods()) scripts.Add(method, ProcessScript(method.ToString()));
@@ -48,5 +48,7 @@ namespace OpenRpg
 
         public double Call(Enum method, double def, params object[] param) =>
             Call(method, DynValue.NewNumber(def), param).Number;
+
+        public object[] Arguments() => new[]{rawLua};
     }
 }

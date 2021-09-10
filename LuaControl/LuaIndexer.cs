@@ -9,7 +9,7 @@ namespace OpenRpg
     public static class LuaIndexer
     {
         public static List<LuaPack> packs = new();
-        public static List<(string ext, Type clss)> classes = new();
+        public static Dictionary<string, Type> classes = new();
         public static Dictionary<string, string> classNames = new();
 
         public static void Init()
@@ -28,11 +28,12 @@ namespace OpenRpg
             {
                 var att = t.GetCustomAttributes<IndexAttribute>().First();
                 UserData.RegisterType(t);
-                classes.Add((att.ToString(), t));
+                classes.Add(att.ToString(), t);
                 classNames.Add(att.ToString(), att.name);
             }
 
             foreach (var pack in packDirs) packs.Add(new LuaPack(pack.Replace("\\", "/")));
+            foreach (var pack in packs) ObjectPool.LoadPack(pack);
         }
     }
 
