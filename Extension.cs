@@ -10,6 +10,21 @@ namespace OpenRpg
     {
         public static T ToEnum<T>(this string s) where T : struct => Enum.Parse<T>(s, true);
 
+        public static void Set<T>(this T t, T overrider)
+        {
+            foreach (var field in typeof(T).GetFields())
+            {
+                try
+                {
+                    field.SetValue(t, field.GetValue(overrider));
+                }
+                catch (TargetException e)
+                {
+                    Console.WriteLine($"FIELD: {field.Name} CORRUPT? {e.Message}");
+                }
+            }
+        }
+        
         /// <summary>
         /// do not know if this works with lists, i think it does, it most likely doesn't work with IEnumberable<T>
         /// </summary>

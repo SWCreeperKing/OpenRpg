@@ -16,6 +16,8 @@ namespace OpenRpg
             Console.WriteLine();
             foreach (var arc in ObjectPool.GetObjs<Archetype>()) 
                 WriteLine($"{arc.className} uses {arc.weaponName}");
+
+            Console.ReadLine();
         }
     }
 }
