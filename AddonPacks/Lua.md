@@ -3,8 +3,9 @@
 ----
 
 - [Archetype](#archetype)
-- [Player](#player)
+- [Difficulty](#difficulty)
 - [Item](#item)
+- [Player](#player)
 - [Enums](#Enums)
 
 ## Notes
@@ -29,22 +30,13 @@ that means it does not return anything. Fields will have a (T: ) to specify the 
 - Enums should be treated as strings, enum returns should be strings (case insensitive) and will be auto converted
 - The .lua in the file extensions are optional, it is mostly there to help with text editors to pick up the syntax
 
-## File Extensions
+### File Extensions
 
-----
-
-- .status.lua
-    - defines a lua file to be interpreted as a status effect
-- .item.lua
-    - defines a lua file to be interpreted as an item
-- .item.class.lua
-    - defines a lua file to be interpreted as an item class
-- .class.lua
-    - defines a lua file to be interpreted as a player class
+- [.arc.lua](#archetype)
 - .att.lua
-    - defines a lua file to be interpreted as an attack
-- .diff.lua
-    - defines a lua file to be interpreted as a difficulty
+- [.diff.lua](#difficulty)
+- [.item.lua](#item)
+- .status.lua
 
 ## Archetype
 
@@ -52,16 +44,37 @@ that means it does not return anything. Fields will have a (T: ) to specify the 
 
 ----
 
-- Fields
-  - (T:S) className
+#### Fields
+
+- (T:S) className
     - Name of the player's class
-  - (T:S) weaponName
+- (T:S) weaponName
     - Name of the player's weapon
-- Methods
-  - Init([Archetype](#archetype))
+
+#### Methods
+
+- Init([Archetype](#archetype))
     - Archetype initialization
 
-## Player
+## Difficulty
+
+.diff.lua
+
+----
+
+#### Fields
+
+- (T:S) name
+    - Name of the difficulty
+- (T:N) baseModifier
+    - Base difficulty modifier
+
+#### Methods
+
+- (R:N) FloorModifier((T:N) floor)
+    - Returns the modifier of the floor number the player is on
+
+## Enemy
 
 ----
 
@@ -71,40 +84,43 @@ that means it does not return anything. Fields will have a (T: ) to specify the 
 
 ----
 
-- Fields
-    - (T:S) name
-        - Name of the item
-    - (T:S) desc
-        - Description of the item
-    - (T:S) lore
-        - Lore of the item
-    - (T:N) protection
-        - Amount of protection the item gives
-    - (T:N) itemLevel
-        - Level of the item
-    - (T:N) damage
-        - Amount of damage the item does (all items equipped will be tallied)
-- Methods
-    - Init([Item](#item), (Number) itemLevel)
-        - Item initialization
-    - (L) Loot([LType, LTable, LRarity](#enums))
-        - Sets the loot information for the item
-    - OnNewFloor([Player](#player))
-      - For when the player enters a new floor
-    - (E) (R:N) OnConsPickup([Player](#player), [Cons](#enums), (C) (T:N) amt)
-      - Amt is the amount of consumables
-    - (E) (R:N) OnDealDamage([Player](#player), [Enemy](#enemy), (C) (T:N) dmg)
-      - Dmg is the amount of damage to deal
-    - (E) (R:N) OnPlayerDamaged([Player](#player), [Enemy](#enemy), (C) (T:N) dmg)
-      - Dmg is the amount of damage received
-    - (E) (R:N) OnPlayerHeal([Player](#player), (C) (T:N) heal)
-      - Heal is the amount of hp to heal
-    - (E) (R:N) OnPotionUse([Player](#player), (C) (T:N) amt)
-      - Amt is the amount of potions used
-    - (E) (R:N) OnXpEarn([Player](#player), (C) (T:N) amt)
-      - Amt is the amount of xp to gain
+#### Fields
 
-## Enemy
+- (T:S) name
+    - Name of the item
+- (T:S) desc
+    - Description of the item
+- (T:S) lore
+    - Lore of the item
+- (T:N) protection
+    - Amount of protection the item gives
+- (T:N) itemLevel
+    - Level of the item
+- (T:N) damage
+    - Amount of damage the item does (all items equipped will be tallied)
+
+#### Methods
+
+- Init([Item](#item), (Number) itemLevel)
+    - Item initialization
+- (L) Loot([LType, LTable, LRarity](#enums))
+    - Sets the loot information for the item
+- OnNewFloor([Player](#player))
+    - For when the player enters a new floor
+- (E) (R:N) OnConsPickup([Player](#player), [Cons](#enums), (C) (T:N) amt)
+    - Amt is the amount of consumables
+- (E) (R:N) OnDealDamage([Player](#player), [Enemy](#enemy), (C) (T:N) dmg)
+    - Dmg is the amount of damage to deal
+- (E) (R:N) OnPlayerDamaged([Player](#player), [Enemy](#enemy), (C) (T:N) dmg)
+    - Dmg is the amount of damage received
+- (E) (R:N) OnPlayerHeal([Player](#player), (C) (T:N) heal)
+    - Heal is the amount of hp to heal
+- (E) (R:N) OnPotionUse([Player](#player), (C) (T:N) amt)
+    - Amt is the amount of potions used
+- (E) (R:N) OnXpEarn([Player](#player), (C) (T:N) amt)
+    - Amt is the amount of xp to gain
+
+## Player
 
 ----
 
