@@ -2,7 +2,9 @@
 
 ----
 
-- [ItemClass](#item)
+- [Archetype](#archetype)
+- [Player](#player)
+- [Item](#item)
 - [Enums](#Enums)
 
 ## Notes
@@ -43,6 +45,21 @@ that means it does not return anything. Fields will have a (T: ) to specify the 
     - defines a lua file to be interpreted as an attack
 - .diff.lua
     - defines a lua file to be interpreted as a difficulty
+
+## Archetype
+
+.arc.lua
+
+----
+
+- Fields
+  - (T:S) className
+    - Name of the player's class
+  - (T:S) weaponName
+    - Name of the player's weapon
+- Methods
+  - Init([Archetype](#archetype))
+    - Archetype initialization
 
 ## Player
 

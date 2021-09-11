@@ -9,13 +9,13 @@ namespace OpenRpg
 
         public static void Write(string text)
         {
-            var txt = text;
+            var txt = text.Replace("[#r]", "[#white]");
             var before = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.White;
             while (Regex.IsMatch(txt, RegMatch))
             {
                 var match = Regex.Match(txt, RegMatch);
-                var index = txt.IndexOf(match.Value, StringComparison.Ordinal); 
+                var index = txt.IndexOf(match.Value, StringComparison.Ordinal);
                 Console.Write(txt[..index]);
                 Console.ForegroundColor = Enum.Parse<ConsoleColor>(match.Groups[1].Value, true);
                 txt = txt[(index + match.Value.Length)..];
@@ -24,7 +24,9 @@ namespace OpenRpg
             Console.Write(txt);
             Console.ForegroundColor = before;
         }
-
+        
+        public static void Write(object s) => Write(s.ToString());
         public static void WriteLine(string s) => Write($"{s}\n");
+        public static void WriteLine(object s) => Write($"{s}\n");
     }
 }

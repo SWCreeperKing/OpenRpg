@@ -11,7 +11,11 @@ namespace OpenRpg
             WriteLine("[#cyan]OpenRpg v.0.1");
             LuaIndexer.Init();
 
-            foreach (var item in ObjectPool.GetObjs<Item>()) Console.WriteLine(item.Init(5).name);
+            foreach (var item in ObjectPool.GetObjs<Item>()) WriteLine(item.Init(5));
+            Console.WriteLine();
+            Console.WriteLine();
+            foreach (var arc in ObjectPool.GetObjs<Archetype>()) 
+                WriteLine($"{arc.className} uses {arc.weaponName}");
         }
     }
 }

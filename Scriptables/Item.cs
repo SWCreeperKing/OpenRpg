@@ -7,18 +7,6 @@ namespace OpenRpg
     [Index("item", "Item")]
     public class Item : LuaLoader
     {
-        public static Random _r = new();
-
-        public string name = "Unknown Item";
-        public string desc = "No Description Given";
-        public string lore = "Item has no Lore entry";
-        public double protection = 1;
-        public double itemLevel = 1;
-        public double damage = 0;
-        public LootType lootType;
-        public LootTable lootTable;
-        public LootRarity lootRarity;
-
         private enum Methods
         {
             OnPlayerDamaged,
@@ -30,6 +18,17 @@ namespace OpenRpg
             OnNewFloor,
             Init,
         }
+        public static Random _r = new();
+
+        public string name = "Unknown Item";
+        public string desc = "No Description Given";
+        public string lore = "Item has no Lore entry";
+        public double protection = 1;
+        public double itemLevel = 1;
+        public double damage = 0;
+        public LootType lootType;
+        public LootTable lootTable;
+        public LootRarity lootRarity;
 
         public Item(string rawLua) : base(rawLua)
         {
@@ -60,6 +59,6 @@ namespace OpenRpg
                 rarity.ToEnum<LootRarity>());
 
         public override Enum[] GetMethods() => Values<Methods>();
-        public override string ToString() => $"[#{lootRarity.ToColor()}]{name}[#r]";
+        public override string ToString() => $"[#{lootRarity.ToColor()}]Lv.{itemLevel} {name}[#r]";
     }
 }
