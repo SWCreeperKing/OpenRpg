@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,9 +9,11 @@ namespace OpenRpg
     {
         public static T ToEnum<T>(this string s) where T : struct => Enum.Parse<T>(s, true);
 
-        public static void Set<T>(this T t, T overrider)
+        public static void Set<T>(this T t, T overrider, bool deep = false)
         {
-            foreach (var field in typeof(T).GetFields())
+            var type = typeof(T);
+            var fields = deep ? type.GetRuntimeFields() : type.GetFields();
+            foreach (var field in fields)
             {
                 try
                 {
