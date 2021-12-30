@@ -18,6 +18,7 @@ namespace OpenRpg
             OnNewFloor,
             Init,
         }
+
         public static Random _r = new();
 
         public string name = "Unknown Item";
@@ -30,7 +31,7 @@ namespace OpenRpg
         public LootTable lootTable;
         public LootRarity lootRarity;
 
-        public Item(string rawLua) : base(rawLua)
+        public Item(string rawLua, string id) : base(rawLua, id)
         {
         }
 
@@ -39,7 +40,7 @@ namespace OpenRpg
             Call(Methods.Init, this, this.itemLevel = itemLevel);
             return this;
         }
-        
+
         public double OnPlayerHeal(Player player, double heal) => Call(Methods.OnPlayerHeal, heal, player);
         public double OnPotionUse(Player player, double amt) => Call(Methods.OnPotionUse, amt, player);
         public double OnXpEarn(Player player, double amt) => Call(Methods.OnXpEarn, amt, player);
@@ -59,6 +60,14 @@ namespace OpenRpg
                 rarity.ToEnum<LootRarity>());
 
         public override Enum[] GetMethods() => Values<Methods>();
+
+        public override string GetData() =>
+            $@"Item Name: {name}
+Rarity: [#{lootRarity.ToColor()}]{lootRarity}[#r]
+Type: {lootType}
+Table: {lootTable}
+Description: {desc}";
+
         public override string ToString() => $"[#{lootRarity.ToColor()}]Lv.{itemLevel} {name}[#r]";
     }
 }

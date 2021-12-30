@@ -8,8 +8,10 @@ namespace OpenRpg
     {
         public string corePath;
         public string packName;
+        public Dictionary<string, List<string>> processedLuaIds = new();
         public Dictionary<string, List<string>> packFiles = new();
         public Dictionary<string, List<string>> rawLua = new();
+        public Dictionary<string, string> names = new();
 
         public LuaPack(string corePath)
         {
@@ -42,11 +44,27 @@ namespace OpenRpg
                 foreach (var file in files)
                 {
                     using StreamReader sr = new(file);
-                    rawLuaCode.Add(sr.ReadToEnd());
+                    var raw = sr.ReadToEnd();
+                    rawLuaCode.Add(raw);
+                    names.Add(raw, file.Replace("\\", "/").Split('/')[^1]);
                     sr.Close();
                 }
 
                 rawLua.Add(fileType, rawLuaCode);
+            }
+        }
+
+        public void ProcessLua()
+        {
+            foreach (var (type, list) in rawLua)
+            foreach (var name in list.Select(item =>
+                     {
+                         var split = names[item].Split('.');
+                         return $"{packName}.{split[^2]}.{split[0]}";
+                     }))
+            {
+                if (processedLuaIds.ContainsKey(type)) processedLuaIds[type].Add(name);
+                else processedLuaIds.Add(type, new List<string> { name });
             }
         }
     }

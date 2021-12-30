@@ -10,13 +10,14 @@ namespace OpenRpg
         public static CoreModules luaImports = CoreModules.Basic | CoreModules.Math;
 
         public string rawLua;
+        public string id;
 
         private Script _script;
         private Dictionary<Enum, object> scripts = new();
 
-        public LuaLoader(string rawLua)
+        public LuaLoader(string rawLua, string id)
         {
-            this.rawLua = rawLua;
+            (this.id, this.rawLua) = (id, rawLua);
             // if (rawLua == "") throw new ArgumentNullException();
             _script = new Script(luaImports);
             _script.DoString(rawLua);
@@ -50,5 +51,7 @@ namespace OpenRpg
             Call(method, DynValue.NewNumber(def), param).Number;
 
         public object[] Arguments() => new[]{rawLua};
+
+        public abstract string GetData();
     }
 }
