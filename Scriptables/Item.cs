@@ -66,7 +66,9 @@ namespace OpenRpg
 Rarity: [#{lootRarity.ToColor()}]{lootRarity}[#r]
 Type: {lootType}
 Table: {lootTable}
-Description: {desc}";
+
+Description: 
+{desc}";
 
         public override string ToString() => $"[#{lootRarity.ToColor()}]Lv.{itemLevel} {name}[#r]";
     }

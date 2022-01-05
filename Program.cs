@@ -76,7 +76,6 @@ namespace OpenRpg
                 }
             }
 
-            
             WriteLine(
                 $"Files: \n{string.Join("\n", pack.processedLuaIds.Select(kv => $"[{LuaIndexer.classNames[kv.Key]}]\n  -{string.Join("\n  -", kv.Value)}"))}");
             Console.ReadKey();

@@ -29,6 +29,9 @@ namespace OpenRpg
                         case Item i:
                             i.Init(1);
                             break;
+                        case Enemy e:
+                            e.Init(1);
+                            break;
                     } 
                     objs.Add(name, initObj);
                 }

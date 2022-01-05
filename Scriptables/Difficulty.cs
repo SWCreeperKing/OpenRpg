@@ -19,8 +19,11 @@ namespace OpenRpg
         public void Init() => Call(Methods.Init, this);
         public double Modifier(double floor) => Call(Methods.FloorModifier, floor);
 
-
         public override Enum[] GetMethods() => Values<Methods>();
-        public override string GetData() => $"Difficulty Name: {name}\nModifier: {baseModifier}\nDescription: {desc}";
+        public override string GetData() => @$"Difficulty Name: {name}
+Modifier: {baseModifier}
+
+Description:
+{desc}";
     }
 }
