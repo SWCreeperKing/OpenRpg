@@ -1,75 +1,100 @@
 ﻿using System;
-using ReUndefinedRpg;
-using static ReUndefinedRpg.EnumBank;
+using AutoModApi.Attributes.Api;
+using AutoModApi.Attributes.Documentation;
+using static OpenRpg.EnumBank;
 
-namespace OpenRpg
+namespace OpenRpg.Scriptables;
+
+public class Item : Scriptable
 {
-    [Index("item", "Item")]
-    public class Item : LuaLoader
+    public static Random r = new();
+
+    [Document("Item name")] public string Name { get; set; } = "Unknown Item";
+    [Document("Item description")] public string Desc { get; set; } = "No Description Given";
+    [Document("Item lore")] public string Lore { get; set; } = "Item has no Lore entry";
+
+    [Document("Item's level of protection")]
+    public double Protection { get; set; } = 1;
+
+    [Document("Item level")] public double ItemLevel { get; set; } = 1;
+    [Document("Item attack damage")] public double Damage { get; set; } = 0;
+    [Document("Item type")] public LootType LootType { get; set; }
+    [Document("Item drop table")] public LootTable LootTable { get; set; }
+    [Document("Item Rarity")] public LootRarity LootRarity { get; set; }
+
+    [Document("Item Initialization Method")]
+    public void Init(int itemLevel) => Execute("Init", new InitArgs(this, itemLevel));
+
+    [Document("For when the player heals")]
+    public double OnPlayerHeal(Player player, double heal)
     {
-        private enum Methods
-        {
-            OnPlayerDamaged,
-            OnPlayerHeal,
-            OnPotionUse,
-            OnConsPickup,
-            OnXpEarn,
-            OnDealDamage,
-            OnNewFloor,
-            Init,
-        }
+        return ExecuteAndReturn("OnPlayerHeal", new HealArgs(player, heal), heal).Result;
+    }
 
-        public static Random _r = new();
+    [Document("For when the player uses a potion")]
+    public double OnPotionUse(Player player, double amount)
+    {
+        return ExecuteAndReturn("OnPotionUse", new PotionArgs(player, amount), amount).Result;
+    }
 
-        public string name = "Unknown Item";
-        public string desc = "No Description Given";
-        public string lore = "Item has no Lore entry";
-        public double protection = 1;
-        public double itemLevel = 1;
-        public double damage = 0;
-        public LootType lootType;
-        public LootTable lootTable;
-        public LootRarity lootRarity;
+    [Document("For when the player receives xp")]
+    public double OnXpEarn(Player player, double amount)
+    {
+        return ExecuteAndReturn("OnXpEarn", new XpArgs(player, amount), amount).Result;
+    }
 
-        public Item(string rawLua, string id) : base(rawLua, id)
-        {
-        }
+    [Document("For when the player enters a new floor")]
+    public void OnNewFloor(Player player) => Execute("OnNewFloor", new FloorArgs(player));
 
-        public Item Init(int itemLevel)
-        {
-            Call(Methods.Init, this, this.itemLevel = itemLevel);
-            return this;
-        }
+    [Document("For when the player gets damaged")]
+    public double OnPlayerDamaged(Player player, Enemy enemy, double dmg)
+    {
+        return ExecuteAndReturn("OnPlayerDamaged", new DamagedArgs(player, enemy, dmg), dmg).Result;
+    }
 
-        public double OnPlayerHeal(Player player, double heal) => Call(Methods.OnPlayerHeal, heal, player);
-        public double OnPotionUse(Player player, double amt) => Call(Methods.OnPotionUse, amt, player);
-        public double OnXpEarn(Player player, double amt) => Call(Methods.OnXpEarn, amt, player);
-        public void OnNewFloor(Player player) => Call(Methods.OnNewFloor, player);
+    [Api("OnConsPickup"), Document("For when the player picks up a consumable")]
+    public double OnConsumablePickup(Player player, Consumables cons, double amount)
+    {
+        return ExecuteAndReturn("OnConsPickup", new ConsumableArgs(player, $"{cons}".ToLower(), amount), amount).Result;
+    }
 
-        public double OnPlayerDamaged(Player player, Enemy enemy, double dmg) =>
-            Call(Methods.OnPlayerDamaged, dmg, player, enemy);
+    [Document("For when the player deals damage")]
+    public double OnDealDamage(Player player, Enemy enemy, double dmg)
+    {
+        return ExecuteAndReturn("OnDealDamage", new DamagedArgs(player, enemy, dmg), dmg).Result;
+    }
 
-        public double OnConsumablePickup(Player player, Consumables cons, double amt) =>
-            Call(Methods.OnConsPickup, amt, player, cons.Name().ToLower());
+    [Document("Sets the loot information for the item")]
+    public void Loot(string type, string table, string rarity)
+    {
+        (LootType, LootTable, LootRarity) =
+            (type.ToEnum<LootType>(), table.ToEnum<LootTable>(), rarity.ToEnum<LootRarity>());
+    }
 
-        public double OnDealDamage(Player player, Enemy enemy, double dmg) =>
-            Call(Methods.OnDealDamage, dmg, player, enemy);
+    [ApiArgument("Init")] public record InitArgs(Item This, int ItemLevel);
 
-        public void Loot(string type, string table, string rarity) =>
-            (lootType, lootTable, lootRarity) = (type.ToEnum<LootType>(), table.ToEnum<LootTable>(),
-                rarity.ToEnum<LootRarity>());
+    [ApiArgument("OnPlayerHeal")] public record HealArgs(Player Player, double Heal);
 
-        public override Enum[] GetMethods() => Values<Methods>();
+    [ApiArgument("OnPotionUse")] public record PotionArgs(Player Player, double Amount);
 
-        public override string GetData() =>
-            $@"Item Name: {name}
-Rarity: [#{lootRarity.ToColor()}]{lootRarity}[#r]
-Type: {lootType}
-Table: {lootTable}
+    [ApiArgument("OnXpEarn")] public record XpArgs(Player Player, double Amount);
 
-Description: 
-{desc}";
+    [ApiArgument("OnNewFloor")] public record FloorArgs(Player Player);
 
-        public override string ToString() => $"[#{lootRarity.ToColor()}]Lv.{itemLevel} {name}[#r]";
+    [ApiArgument("OnPlayerDamaged", "OnDealDamage")]
+    public record DamagedArgs(Player Player, Enemy Enemy, double Damage);
+
+    [ApiArgument("OnConsPickup")] public record ConsumableArgs(Player Player, string Cons, double Amount);
+
+    public override string GetData()
+    {
+        return $"""
+        Item Name: {Name}
+        Rarity: [#{LootRarity.ToColor()}]{LootRarity}[#r]
+        Type: {LootType}
+        Table: {LootTable}
+        Description: 
+        {Desc}
+        """;
     }
 }

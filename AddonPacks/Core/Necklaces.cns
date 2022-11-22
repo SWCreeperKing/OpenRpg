@@ -1,0 +1,51 @@
+type Item called Experienced Necklace
+    method Init
+        .Name = "Experienced Necklace"
+        .Desc = "+50% more Xp"
+        .Loot("necklace", "boss", "uncommon")
+    end
+    
+    method OnXpEarn
+        return Amount * 1.5f
+    end
+end
+
+type Item called Greedy Necklace
+    method Init
+        .Name = "Greedy Necklace"
+        .Desc = "2x Gold Coins"
+        .Lore = "Ooh! Piece of candy! Ooh! Piece of candy! Ooh! Piece of candy!"
+        .Loot("necklace", "chest", "rare")
+    end
+    
+    method OnConsPickup
+        interop start
+            if (Cons == "coin") return Amount * 2; 
+        end
+        return Amount
+    end
+end
+
+type Item called Healthy Necklace
+    method Init
+        .Name = "Healthy Necklace"
+        .Desc = "+50% more Health from Healing"
+        .Loot("necklace", "chest", "uncommon")
+    end
+    
+    method OnPlayerHeal
+        return Heal * 1.5f
+    end
+end
+
+type Item called Strong Necklace
+    method Init
+        .Name = "Strong Necklace"
+        .Desc = "+25% more Attack Damage"
+        .Loot("necklace", "monster", "uncommon")
+    end
+    
+    method OnDealDamage
+        return Damage * 1.25f
+    end
+end

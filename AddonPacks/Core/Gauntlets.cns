@@ -1,0 +1,60 @@
+type Item called Angelic Gauntlet
+    method Init
+        .Name = "Angelic Gauntlet"
+        .Desc = "+5 Potions every floor"
+        .Loot("gauntlet", "chest", "uncommon")
+    end
+    
+    method OnNewFloor
+        Player.AddToInv("potion", 5)
+    end
+end
+
+type Item called Ascended Gauntlet
+    method Init
+        .Name = "Ascended Gauntlet"
+        .Desc = "+5% Xp needed to level every floor"
+        .Loot("gauntlet", "boss", "legendary")
+    end
+    
+    method OnNewFloor
+        Player.GainXp(Player.RequiredXp() * .05f)
+    end
+end
+
+type Item called Demonic Gauntlet
+    method Init
+        .Name = "Demonic Gauntlet"
+        .Desc = "+5 Bombs and Keys every floor"
+        .Loot("gauntlet", "elite", "epic")
+    end
+    
+    method OnNewFloor
+        Player.AddToInv("bomb", 5)
+        Player.AddToInv("key", 5)
+    end
+end
+
+type Item called Rich Gauntlet
+    method Init
+        .Name = "Rich Gauntlet"
+        .Desc = "+25% of your current gold every floor"
+        .Loot("gauntlet", "elite", "legendary")
+    end
+    
+    method OnNewFloor
+        Player.AddToInv("coin", Player.GetFromInv("coin") * 1.25f)
+    end
+end
+
+type Item called Vengeful Gauntlet
+    method Init
+        .Name = "Vengeful Gauntlet"
+        .Desc = "+(2 * floor level) damage"
+        .Loot("gauntlet", "random", "rare")
+    end
+    
+    method OnDealDamage
+        return Damage + 2 * Player.CurrentFloor()
+    end
+end

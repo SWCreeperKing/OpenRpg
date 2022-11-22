@@ -1,0 +1,11 @@
+﻿type Item called Beginner Potion
+    method Init
+        .Name = "Beginner Potion"
+        .Desc = "The starting potion type, heal for 15 hp"
+        .Loot("potion", "random", "basic")
+    end
+    
+    method OnPotionUse
+        return Amount + 15
+    end
+end

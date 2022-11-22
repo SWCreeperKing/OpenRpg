@@ -1,0 +1,63 @@
+type Archetype called Archer
+    method Init
+        .ClassName = "Archer"
+        .WeaponName = "Bow"
+        .Defense = 0
+        .Attack = 2
+        .MaxHp = 90
+        .Speed = 1.2f
+        .SpeedRegen = 1.4f
+        .Desc = "This poor fellow grew up in the woods as a hunter, now fights for the king"
+    end
+end
+
+type Archetype called Ninja
+    method Init
+        .ClassName = "Ninja"
+        .WeaponName = "Throwing Star"
+        .Defense = 1
+        .Attack = 1
+        .MaxHp = 80
+        .Speed = 2
+        .SpeedRegen = 2
+        .Desc = "Trained by 3 of the 4 master ninjas, destined to obtain their revenge"
+    end
+end
+
+type Archetype called Soldier
+    method Init
+        .ClassName = "[#magenta]Soldier[#r]"
+        .WeaponName = "Spear"
+        .Defense = 3
+        .Attack = 2
+        .MaxHp = 110
+        .Speed = 1.25f
+        .SpeedRegen = .75f
+        .Desc = "Trained to fight for the king who is now taking the battle to the enemy"
+    end
+end
+
+type Archetype called Weapon Smith
+    method Init
+        .ClassName = "Weapon Smith"
+        .WeaponName = "Sword"
+        .Defense = 2
+        .Attack = 3
+        .MaxHp = 105
+        .SpeedRegen = .8f
+        .Desc = "A very talented black smith who was very skilled with making weapons"
+    end
+end
+
+type Archetype called Wizard
+    method Init
+        .ClassName = "Wizard"
+        .WeaponName = "Wand"
+        .Defense = 0
+        .Attack = 2
+        .MaxHp = 90
+        .Speed = 1
+        .SpeedRegen = 1.5f
+        .Desc = "A meek monk who devoted their time to use their power to fight for the king"
+    end
+end

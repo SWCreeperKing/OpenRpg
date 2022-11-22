@@ -1,33 +1,37 @@
-﻿using System;
+﻿using AutoModApi.Attributes.Api;
+using AutoModApi.Attributes.Documentation;
 
-namespace OpenRpg
+namespace OpenRpg.Scriptables;
+
+public class Archetype : Scriptable
 {
-    [Index("arc", "Archetype")]
-    public class Archetype : LuaLoader
+    [Document("Archetype name")] public string ClassName { get; set; } = "Unknown";
+    [Document("Archetype weapon name")] public string WeaponName { get; set; } = "Stick";
+    [Document("Archetype description")] public string Desc { get; set; } = "No Description Provided";
+    [Document("Archetype attack speed")] public float Speed { get; set; } = 1;
+
+    [Document("Archetype regeneration speed")]
+    public float SpeedRegen { get; set; }  = 1;
+
+    [Document("Archetype defense")] public int Defense { get; set; } = 1;
+    [Document("Archetype attack damage")] public int Attack { get; set; } = 1;
+    [Document("Archetype max health")] public int MaxHp { get; set; } = 100;
+    [Document("Archetype xp modifier")] public float XpMod { get; set; } = 1f;
+
+    [Document("Archetype initialization method")]
+    public void Init() => Execute("Init", new InitArgs(this));
+
+    [ApiArgument("Init")] public record InitArgs(Archetype This);
+
+    public override string GetData()
     {
-        public enum Methods
-        {
-            Init
-        }
-
-        public string className = "Unknown";
-        public string weaponName = "Stick";
-        public string desc = "No Description Provided";
-        public float speed = 1;
-        public float speedRegen = 1;
-        public int defense = 1;
-        public int attack = 1;
-        public int maxHp = 100;
-
-        public Archetype(string rawLua, string id) : base(rawLua, id) => Init();
-        public void Init() => Call(Methods.Init, this);
-        public override Enum[] GetMethods() => Values<Methods>();
-        public override string GetData() => @$"Class Name: [{className}]
-Weapon Type: [{weaponName}]
-Max Hp: [#red]{maxHp}[#r] | defense: [#gray]{defense}[#r] | Attack: [#blue]{attack}[#r]
-Speed: {speed} (+{speedRegen}/other turn)
-
-Description:
-{desc}";
+        return $"""
+        Class Name: [{ClassName}]
+        Weapon Type: [{WeaponName}]
+        Max Hp: [#red]{MaxHp}[#r] | defense: [#gray]{Defense}[#r] | Attack: [#blue]{Attack}[#r]
+        Speed: {Speed} (+{SpeedRegen}/other turn)
+        Description:
+        {Desc}
+        """;
     }
 }

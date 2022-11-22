@@ -1,0 +1,13 @@
+type Room called Treasure Room
+    method Init
+        .Chests = 5..7
+    end
+end
+
+type Room called Goblin Hideout
+    method Init
+        .Chests= 1..2
+		.AddEnemiesByTag("goblin")
+        .RemoveEnemiesByType("boss")
+    end
+end

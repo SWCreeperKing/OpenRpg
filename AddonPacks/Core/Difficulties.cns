@@ -1,0 +1,35 @@
+type Difficulty called Easy
+    method Init
+        .Name = "Easy"
+        .BaseModifier = .5
+        .Desc = "A calm difficulty"
+    end
+    
+    method Modifier
+        return Floor / 2f
+    end
+end
+
+type Difficulty called Normal
+    method Init
+        .Name = "Normal"
+        .BaseModifier = 1
+        .Desc = "A normal, average experience"
+    end
+    
+    method Modifier
+        return Floor
+    end
+end
+
+type Difficulty called Hard
+    method Init
+        .Name = "Hard"
+        .BaseModifier = 2
+        .Desc = "Oof"
+    end
+    
+    method Modifier
+        return Floor * 1.5f
+    end
+end

@@ -3,59 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace OpenRpg
+namespace OpenRpg;
+
+public static class Extension
 {
-    public static class Extension
+    public static T ToEnum<T>(this string s) where T : struct => Enum.Parse<T>(s, true);
+
+    public static void Set<T>(this T t, T overrider, bool deep = false)
     {
-        public static T ToEnum<T>(this string s) where T : struct => Enum.Parse<T>(s, true);
-
-        public static void Set<T>(this T t, T overrider, bool deep = false)
+        var type = typeof(T);
+        var fields = deep ? type.GetRuntimeFields() : type.GetFields();
+        foreach (var field in fields)
         {
-            var type = typeof(T);
-            var fields = deep ? type.GetRuntimeFields() : type.GetFields();
-            foreach (var field in fields)
+            try
             {
-                try
-                {
-                    field.SetValue(t, field.GetValue(overrider));
-                }
-                catch (TargetException e)
-                {
-                    Console.WriteLine($"FIELD: {field.Name} CORRUPT? {e.Message}");
-                }
+                field.SetValue(t, field.GetValue(overrider));
+            }
+            catch (TargetException e)
+            {
+                Console.WriteLine($"FIELD: {field.Name} CORRUPT? {e.Message}");
             }
         }
-        
-        /// <summary>
-        /// do not know if this works with lists, i think it does, it most likely doesn't work with IEnumberable<T>
-        /// </summary>
-        public static object Clone(this object obj, bool useGlobalVars = false, params object[] param)
-        {
-            if (obj is null) return null;
-            if (obj is Array a) // catch array types, this was painful
-            {
-                var newA = Array.CreateInstance(a.GetType().GetElementType(), a.Length);
-                for (var i = 0; i < newA.Length; i++) newA.SetValue(a.GetValue(i).Clone(useGlobalVars), i);
-                return newA;
-            }
-
-            var t = obj.GetType();
-            if (t.IsPrimitive || obj is string or Enum) return obj;
-            var newInst = obj is ICopyable c && param.Length < 1
-                ? Activator.CreateInstance(t, c.Arguments())
-                : Activator.CreateInstance(t, param);
-            var fields = useGlobalVars ? t.GetRuntimeFields() : t.GetFields();
-            foreach (var field in fields.Where(f => !f.IsInitOnly))
-                field.SetValue(newInst, field.GetValue(obj).Clone(useGlobalVars));
-            return newInst;
-        }
-
-        public static T Clone<T>(this T t, bool useGlobalVars = false, params object[] param) =>
-            (T)((object)t).Clone(useGlobalVars, param);
-
-        public static T[] CloneArr<T>(this IEnumerable<T> t, bool useGlobalVars = false) =>
-            t.Select(o => o.Clone(useGlobalVars)).ToArray();
-
-        public static string Name(this Enum e) => nameof(e);
     }
+
+    public static string PickFromWeight(this Random r, params (string name, float weight)[] weights)
+    {
+        var totalWeight = weights.Select(w => w.weight).Sum();
+        var picked = r.Next(totalWeight);
+        return weights.All(w => w.weight < picked)
+            ? weights[^1].name
+            : weights.First(w => w.weight >= picked).name;
+    }
+
+    public static float Next(this Random r, float max) => r.Next(0f, max);
+    public static double Next(this Random r, double max) => r.Next(0d, max);
+    public static float Next(this Random r, float min, float max) => (float) (min + (max - min) * r.NextDouble());
+    public static double Next(this Random r, double min, double max) => min + (max - min) * r.NextDouble();
 }

@@ -1,84 +1,136 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using AutoModApi;
+using OpenRpg.Scriptables;
 using static OpenRpg.ClrCnsl;
 
-namespace OpenRpg
+namespace OpenRpg;
+
+class Program
 {
-    class Program
+    public const string Notes = """
+                            ==== Weighted Chances ==== 
+    When randomly picking stuff with weighted chances all weights are added. 
+    Then a random number is picked between 0 and the total weight of the list. 
+    The one picked is the first one in the list thats weight is bigger than the picked number
+    """; 
+    
+    public static void Main()
     {
-        static void Main(string[] args)
+        Console.Clear();
+        Console.CursorVisible = false;
+        var compile = false;
+
+        Api.projectName = "Open Rpg";
+        Api.ReadDir("AddonPacks");
+        Api.Initialize("AddonPacks", Notes);
+        Api.OnRegister += s =>
         {
-            Console.CursorVisible = false;
-            LuaIndexer.Init();
-
-            // foreach (var item in ObjectPool.GetObjs<Item>()) WriteLine(item.Init(5));
-            // foreach (var arc in ObjectPool.GetObjs<Archetype>()) 
-            //     WriteLine($"{arc.className} uses {arc.weaponName}");
-
-            while (true)
+            if (!s.StartsWith("Enemy")) return;
+            var name = string.Join(".", s.Split(".")[1..]);
+            var enemy = Api.CreateType<Enemy>(name);
+            enemy.Init(1);
+            foreach (var tag in enemy.Tags.Select(s => s.ToLower()))
             {
-                WriteLine("[#cyan]OpenRpg v.0.1\n");
-
-                switch (ListView("Start Game", "Content Packs", "Exit"))
-                {
-                    case 0:
-                        break;
-                    case 1:
-                        ContentPacks();
-                        break;
-                    case 2:
-                        return;
-                }
-
-                Console.Clear();
+                if (!Enemy.EnemyTags.ContainsKey(tag)) Enemy.EnemyTags.Add(tag, new List<string>());
+                Enemy.EnemyTags[tag].Add(name);
             }
-        }
+            if (!Enemy.EnemyTypes.ContainsKey(enemy.EnemyType)) Enemy.EnemyTypes.Add(enemy.EnemyType, new List<string>());
+            Enemy.EnemyTypes[enemy.EnemyType].Add(name);
+        };
 
-        public static void ContentPacks()
+        while (true)
         {
-            var names = LuaIndexer.packs.Select(p => p.packName).Concat(new[] { "Back To Main Menu" }).ToArray();
-            while (true)
+            if (!compile)
             {
-                Console.Clear();
-                WriteLine($"There are [#yellow]{LuaIndexer.packs.Count}[#r] Content Pack(s)\n");
-
-                var choice = ListView(names);
-                if (choice == names.Length - 1) return;
-                ListPack(LuaIndexer.packs[choice]);
+                Enemy.EnemyTags.Clear();
+                Api.CompileWithLoading();
+                compile = true;
             }
-        }
 
-        public static void ListPack(LuaPack pack)
-        {
-            var each = pack.processedLuaIds.Select(kv => $"[{LuaIndexer.classNames[kv.Key]}]: {kv.Value.Count}")
-                .Concat(new[] { "Back To Content Packs" }).ToArray();
+            WriteLine("[#cyan]OpenRpg v.0.1\n");
 
-            while (true)
+            switch (ListView("Start Game", "Scour Game Scripts", "Recompile", "Exit"))
             {
-                Console.Clear();
-                WriteLine($"You are viewing the [#yellow]{pack.packName}[#r] Content Pack\n");
-
-                var choice = ListView(each);
-                if (choice == each.Length - 1) return;
-                var id = pack.processedLuaIds.Keys.ToArray()[choice];
-                var items = pack.processedLuaIds[id].Concat(new[] {"Back to Type Selection"}).ToArray();
-
-                while (true)
-                {
+                case 0:
+                    break;
+                case 1:
+                    ContentList();
+                    break;
+                case 2:
                     Console.Clear();
-                    WriteLine($"You are viewing the [#green]{LuaIndexer.classNames[id]}[#r] types from the [#yellow]{pack.packName}[#r] Content Pack");
-
-                    var item = ListView(items);
-                    if (item == items.Length - 1) break;
-                    WriteLine(ObjectPool.objs[items[item]].GetData());
-                    WriteLine("\nPress Any Key to go back to Type Selection");
-                    Console.ReadKey();
-                }
+                    WriteLine("Are you sure you want to recompile?");
+                    if (ListView("Yes", "No") == 0) compile = false;
+                    break;
+                case 3:
+                    Console.Clear();
+                    WriteLine(
+                        "[#red]Goodbye[#r], and [#green]Thanks for Playing[#r]! [#cyan]Please comeback later[#r]!");
+                    Environment.Exit(0);
+                    return;
             }
 
-            WriteLine(
-                $"Files: \n{string.Join("\n", pack.processedLuaIds.Select(kv => $"[{LuaIndexer.classNames[kv.Key]}]\n  -{string.Join("\n  -", kv.Value)}"))}");
-            Console.ReadKey();
+            Console.Clear();
         }
+    }
+
+    public static void ContentList()
+    {
+        var groups = Api.ObjectPool.Select(kv => kv.Key).GroupBy(s => s[..s.IndexOf('.')]).ToArray();
+        var names = groups.Select(g => g.Key).Select(p => p).Concat(new[] { "Back To Main Menu" }).ToArray();
+        while (true)
+        {
+            Console.Clear();
+            WriteLine($"There are [#yellow]{groups.Length}[#r] Script type(s)\n");
+
+            var choice = ListView(names);
+            if (choice == names.Length - 1 || choice == -1) return;
+
+            var category = groups[choice];
+            var subNames = category.Select(s => s[(s.IndexOf('.') + 1)..]).Concat(new[] { "Back To Script type(s)" })
+                .ToArray();
+
+            while (true)
+            {
+                Console.Clear();
+                WriteLine($"There are [#yellow]{category.Count()}[#r] types of [#green]{category.Key}[#r]\n");
+
+                var subChoice = ListView(subNames);
+                if (subChoice == subNames.Length - 1 || subChoice == -1) break;
+
+                if (!Api.TypeDictionary[category.Key].IsAssignableTo(typeof(Scriptable))) return;
+                var item = (Scriptable) Api.CreateType(Api.TypeDictionary[category.Key], subNames[subChoice]);
+
+                switch (item)
+                {
+                    case Archetype a:
+                        a.Init();
+                        break;
+                    case Difficulty d:
+                        d.Init();
+                        break;
+                    case Enemy e:
+                        e.Init(1);
+                        break;
+                    case Item i:
+                        i.Init(1);
+                        break;
+                    case Room r:
+                        r.Init(1);
+                        break;
+                }
+
+                DisplayType(item);
+            }
+        }
+    }
+
+    public static void DisplayType(Scriptable scriptable)
+    {
+        Console.Clear();
+        WriteLine(scriptable.GetData());
+        WriteLine("\nPress Any Key to go back to Type Selection");
+        Console.ReadKey();
     }
 }

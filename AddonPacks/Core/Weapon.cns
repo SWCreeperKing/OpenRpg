@@ -1,0 +1,8 @@
+﻿type Item called Dirt Weapon
+    method Init
+        .Name = "Dirt [w]"
+        .Desc = "This is a basic, dirty weapon you found. It's somehow able to stay in one piece"
+        .Loot("weapon", "monster", "basic")
+        .Damage = ItemLevel * 4
+    end
+end

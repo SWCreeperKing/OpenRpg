@@ -1,0 +1,71 @@
+﻿type Enemy called Goblin
+    method Init
+        .Name = "[#green]Goblin[#r]"
+        .Defense = -1
+        .Attack = EnemyLevel
+        .MaxHp = 10 * EnemyLevel
+        .Speed = 2
+        .SpeedRegen = 1.5f
+        .Desc = "A small, but very fast creature"
+        
+        .AddTags("goblin", "humanoid")
+    end
+end
+
+type Enemy called Goblin Scout
+    method Init
+        .Name = "[#green]Goblin Scout[#r]"
+        .Defense = -3
+        .Attack = EnemyLevel
+        .MaxHp = 10 * EnemyLevel
+        .Speed = 3
+        .SpeedRegen = 3
+        .Desc = "A goblin specialized in scouting"
+        
+        .AddTags("goblin", "humanoid")
+    end
+end
+
+type Enemy called Hob Goblin
+    method Init
+        .Name = "[#green]Hob Goblin[#r]"
+        .Defense = 1
+        .Attack = EnemyLevel * 1.5f
+        .MaxHp = 20 * EnemyLevel
+        .Speed = 1
+        .SpeedRegen = 1.2f
+        .Desc = "A slightly bigger, stronger goblin"
+        
+        .AddTags("goblin", "humanoid") 
+    end
+end
+
+type Enemy called Goblin Titan
+    method Init
+        .Name = "[#green]Goblin Titan[#r]"
+        .Defense = 10
+        .Attack = EnemyLevel * 10
+        .MaxHp = 100 * EnemyLevel
+        .Speed = .5f
+        .SpeedRegen = .25f
+        .Desc = "A rare powerful goblin"
+
+        .AddTags("goblin", "humanoid", "titan")
+        .SetEnemyType("elite")
+    end
+end
+
+type Enemy called Goblin Champion
+    method Init
+        .Name = "[#green]Goblin Champion[#r]"
+        .Defense = 7
+        .Attack = EnemyLevel * 5
+        .MaxHp = 25 * EnemyLevel
+        .Speed = 1
+        .SpeedRegen = 1
+        .Desc = "A goblin who has proven themself"
+
+        .AddTags("goblin", "humanoid")
+        .SetEnemyType("boss")
+    end
+end
